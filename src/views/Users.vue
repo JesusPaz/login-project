@@ -8,36 +8,31 @@
         <v-text-field label="Email" v-model="user.email" :rules="emailRules"></v-text-field>
         <v-text-field label="Contraseña" :type="'password'" v-model="user.password"></v-text-field>
         <v-text-field label="Valido hasta" v-model="user.validto"></v-text-field>
-        <v-text-field label="Dependencia" v-model="user.dependency"></v-text-field>
+        
+        <v-select v-model="user.dependency" :items="namedependencies" label="Dependencies"></v-select>
         <v-select v-model="user.active" :items="ops" label="Activo"></v-select>
         <v-btn :disabled="!valid" @click="submit">Crear usuario</v-btn>
       </v-form>
       <div>
         <h3>Usuarios creados hasta el momento</h3>
-
-        
-
-
-
-         <v-card>
-        <v-card-title>
-          <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
-        </v-card-title>
-        <v-data-table
-          :search="search"
-          :headers="headers"
-          :items="deps"
-          sort-by="name"
-          class="elevation-1"
-        >
-          <template v-slot:top></template>
-          <template v-slot:item.action="{ item }">
-            <v-icon small class="mr-2" @click="editUser(item)">edit</v-icon>
-            <v-icon small @click="deleteUser(item)">delete</v-icon>
-          </template>
-        </v-data-table>
-      </v-card>
-
+        <v-card>
+          <v-card-title>
+            <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
+          </v-card-title>
+          <v-data-table
+            :search="search"
+            :headers="headers"
+            :items="deps"
+            sort-by="name"
+            class="elevation-1"
+          >
+            <template v-slot:top></template>
+            <template v-slot:item.action="{ item }">
+              <v-icon small class="mr-2" @click="editUser(item)">edit</v-icon>
+              <v-icon small @click="deleteUser(item)">delete</v-icon>
+            </template>
+          </v-data-table>
+        </v-card>
       </div>
     </div>
   </v-app>
@@ -55,6 +50,7 @@ export default {
     return {
       valid: false,
       deps: [],
+      namedependencies:[],
       ops: ["True", "False"],
 
       search: "",
@@ -103,14 +99,17 @@ export default {
     };
   },
 
+  
+
   mounted() {
     this.getDeps();
-    console.info("mounted, deps:", this.deps); // // => at this point, this.users is not yet ready.
+    this.getDepeIds();
   },
   computed: {
     items: function() {
       return this.deps;
-    }
+    },    
+
   },
 
   methods: {
@@ -158,11 +157,19 @@ export default {
             this.deps.push(doc.data());
           });
         });
-    }
+    },
+    async getDepeIds() {
+      await db
+        .collection("dependencies")
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.docs.forEach(doc => {
+            this.namedependencies.push(doc.data().name);
+          });
+        });
+    },
+
   },
-  components:{
-    
-  }
 };
 </script>
 
