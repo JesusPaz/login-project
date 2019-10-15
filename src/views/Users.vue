@@ -14,65 +14,56 @@
     <div>
       <h3>Usuarios creados hasta el momento</h3>
 
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Email</th>
-            <th>Contraseña</th>
-            <th>Valido hasta</th>
-            <th>Dependencia</th>
-            <th>Activo</th>
-            <th colspan="2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="user in users" v-bind:key="user['.key']">
-            <td>{{ user.name }}</td>
-            <td>{{ user.lastname }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.password }}</td>
-            <td>{{ user.validto }}</td>
-            <td>{{ user.dependency }}</td>
-            <td>{{ user.active }}</td>
-            <td>
-              <router-link
-                :to="{ name: 'Edit', params: {id: user['.key']} }"
-                class="btn btn-warning"
-              >Editar</router-link>
-              <v-btn @click="removeUser">Eliminar</v-btn>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <v-simple-table>
+        <template v-slot:default>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Email</th>
+              <th>Contraseña</th>
+              <th>Valido hasta</th>
+              <th>Dependencia</th>
+              <th>Activo</th>
+              <th colspan="2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(i, idx) in deps" :key="idx">
+              <td>{{ i.name }}</td>
+              <td>{{ i.lastname }}</td>
+              <td>{{ i.email }}</td>
+              <td>{{ i.password }}</td>
+              <td>{{ i.validto }}</td>
+              <td>{{ i.dependency }}</td>
+              <td>{{ i.active }}</td>
+              <td>
+                <router-link
+                  :to="{ name: 'Edit', params: {id: i['.key']} }"
+                  class="btn btn-warning"
+                >Editar</router-link>
+                <v-btn @click="removeUser">Eliminar</v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </template>
+      </v-simple-table>
     </div>
   </div>
 </template>
 
 <script>
-import firebase from "firebase";
-import config from "./config";
-import { arch } from "os";
+import { db } from "./db";
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(config);
-}
-
-let database = firebase.database();
-let usersRef = database.ref("users");
+let query = db.collection("users");
 
 export default {
   name: "Users",
 
-  firebase: {
-    users: database.ref("users")
-  },
-
   data() {
     return {
       valid: false,
-      users: {},
+      deps: [],
 
       user: {
         name: "",
@@ -107,17 +98,29 @@ export default {
       ]
     };
   },
+
+  mounted() {
+    this.getDeps();
+    console.info("mounted, deps:", this.deps); // // => at this point, this.users is not yet ready.
+  },
+  computed: {
+    items: function() {
+      return this.deps;
+    }
+  },
+
   methods: {
     submit() {
-      usersRef.push({
-        name: this.user.name,
-        lastname: this.user.lastname,
-        email: this.user.email,
-        password: this.user.password,
-        validto: this.user.validto,
-        dependency: this.user.dependency,
-        active: this.user.active
-      });
+      db.collection("users")
+        .add(this.user)
+        .then(function(docRef) {
+          console.log("Document written with ID: ", docRef.id);
+        })
+        .catch(function(error) {
+          console.error("Error adding document: ", error);
+          alert(error);
+        });
+
       alert("Usuario registrado correctamente");
       this.user.name = "";
       this.user.lastname = "";
@@ -126,12 +129,18 @@ export default {
       this.user.validto = "";
       this.user.dependency = "";
       this.user.active = "";
-      console.log(this.users)
+      console.log(this.users);
     },
-    removeUser(key) {
-      usersRef.child(user[".key"]).remove();
-    },
-    editUser() {}
+    async getDeps() {
+      await db
+        .collection("users")
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.docs.forEach(doc => {
+            this.deps.push(doc.data());
+          });
+        });
+    }
   }
 };
 </script>

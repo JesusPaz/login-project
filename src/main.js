@@ -19,7 +19,7 @@ import Users from './views/Users.vue'
 import Dependencies from './views/Dependencies.vue'
 
 Vue.use(VueRouter);
-Vue.use(firestorePlugin)
+Vue.use(firestorePlugin);
 
 Vue.config.productionTip = false
 
