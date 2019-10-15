@@ -42,7 +42,6 @@
                   :to="{ name: 'Edit', params: {id: i['.key']} }"
                   class="btn btn-warning"
                 >Editar</router-link>
-                <v-btn @click="removeUser">Eliminar</v-btn>
               </td>
             </tr>
           </tbody>
