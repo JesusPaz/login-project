@@ -1,23 +1,25 @@
 <template>
-  <div class="form-wrapper" id="Login">
-    <v-form v-model="valid">
-      <v-text-field label="Email" v-model="email" :rules="emailRules"></v-text-field>
-      <v-text-field :type="'password'" label="Password" v-model="password" :rules="passwordRules"></v-text-field>
-      <v-btn @click="submit" :disabled="!valid">Login</v-btn>
-    </v-form>
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <p>You are not logged in?</p>
-    <br />
-    <router-link to="signup">Sign up</router-link>
-  </div>
+  <v-app id="vue-app-color">
+    <div class="form-wrapper" id="Login">
+      <v-form v-model="valid">
+        <v-text-field label="Email" v-model="email" :rules="emailRules"></v-text-field>
+        <v-text-field :type="'password'" label="Password" v-model="password" :rules="passwordRules"></v-text-field>
+        <v-btn @click="submit" :disabled="!valid">Login</v-btn>
+      </v-form>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <p>You are not logged in?</p>
+      <br />
+      <router-link to="signup">Sign up</router-link>
+    </div>
+  </v-app>
 </template>
 
 <script>
-import firebase from 'firebase';
+import firebase from "firebase";
 
 export default {
   name: "Login",
@@ -72,5 +74,9 @@ export default {
 #Login {
   padding: 15% 25% 25% 25%;
   block-size: 100px;
+}
+
+#vue-app-color {
+  background-color: white;
 }
 </style>

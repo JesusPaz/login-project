@@ -1,32 +1,34 @@
 <template>
-  <div id="Signup">
-    <v-form v-model="valid">
-      <v-text-field label="Email" v-model="email" :rules="emailRules"></v-text-field>
-      <v-text-field
-        label="Type password"
-        :type="'password'"
-        v-model="password"
-        :rules="passwordRules"
-      ></v-text-field>
-      <v-text-field
-        label="Write again your password"
-        :type="'password'"
-        v-model="reenterpassword"
-        :rules="passwordRules"
-      ></v-text-field>
-      <v-btn @click="submit" :disabled="!valid">Sign up</v-btn>
-    </v-form>
+  <v-app id="vue-app-color">
+    <div id="Signup">
+      <v-form v-model="valid">
+        <v-text-field label="Email" v-model="email" :rules="emailRules"></v-text-field>
+        <v-text-field
+          label="Type password"
+          :type="'password'"
+          v-model="password"
+          :rules="passwordRules"
+        ></v-text-field>
+        <v-text-field
+          label="Write again your password"
+          :type="'password'"
+          v-model="reenterpassword"
+          :rules="passwordRules"
+        ></v-text-field>
+        <v-btn @click="submit" :disabled="!valid">Sign up</v-btn>
+      </v-form>
 
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <p>
-      Go back to
-      <router-link to="/home">Login</router-link>
-    </p>
-  </div>
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <p>
+        Go back to
+        <router-link to="/home">Login</router-link>
+      </p>
+    </div>
+  </v-app>
 </template>
 
 <script>
@@ -91,5 +93,9 @@ export default {
 #Signup {
   padding: 15% 25% 25% 25%;
   block-size: 100px;
+}
+
+#vue-app-color {
+  background-color: white;
 }
 </style>
