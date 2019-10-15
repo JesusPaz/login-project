@@ -9,7 +9,7 @@ set -e
 # echo Linting..
 # npm run lint
 echo Building. this may take a minute...
-npm run build
+yarn run build
 
 # navigate into the build output directory
 cd dist
@@ -20,7 +20,7 @@ cd dist
 echo Deploying..
 git init
 git add -A
-git commit -m 'deploy'
+git commit -m 'deploy to gh-pages'
 
 # deploy
 git push -f https://github.com/JesusPaz/login-project.git master:gh-pages

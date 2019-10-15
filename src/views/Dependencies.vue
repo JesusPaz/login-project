@@ -43,8 +43,6 @@
 <script>
 import { db } from "./db";
 
-let query = db.collection("dependencies");
-
 export default {
   name: "Dependencies",
   data() {
@@ -90,8 +88,7 @@ export default {
   },
   mounted() {
     this.getDeps();
-    console.info("mounted, deps:", this.deps); // // => at this point, this.users is not yet ready.
-  },
+    },
   computed: {
     items: function() {
       return this.deps;
@@ -104,10 +101,9 @@ export default {
       db.collection("dependencies")
         .add(this.newDependency)
         .then(function(docRef) {
-          console.log("Document written with ID: ", docRef.id);
+          alert("Dependency added");
         })
         .catch(function(error) {
-          console.error("Error adding document: ", error);
           alert(error);
         });
 
@@ -116,9 +112,6 @@ export default {
       this.newDependency.maxnumber = "";
       this.newDependency.location = "";
       this.newDependency.active = "";
-	  console.log(this.dependenciesDB);
-	  
-
     },
     async getDeps() {
       await db
