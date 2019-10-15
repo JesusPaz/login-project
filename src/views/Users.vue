@@ -38,10 +38,14 @@
               <td>{{ i.dependency }}</td>
               <td>{{ i.active }}</td>
               <td>
-                <router-link
-                  :to="{ name: 'Edit', params: {id: i['.key']} }"
-                  class="btn btn-warning"
-                >Editar</router-link>
+                <button
+                  class="ml-3 bg-red hover:bg-red-dark text-white font-bold py-2 px-4 rounded text-xs"
+                  v-on:click="deleteUser(i)"
+                >Delete</button>
+                <button
+                  class="ml-3 bg-red hover:bg-red-dark text-white font-bold py-2 px-4 rounded text-xs"
+                  v-on:click="editUser(i)"
+                >Edit</button>
               </td>
             </tr>
           </tbody>
@@ -111,15 +115,8 @@ export default {
   methods: {
     submit() {
       db.collection("users")
-        .add(this.user)
-        .then(function(docRef) {
-          console.log("Document written with ID: ", docRef.id);
-        })
-        .catch(function(error) {
-          console.error("Error adding document: ", error);
-          alert(error);
-        });
-
+        .doc(this.user.email)
+        .set(this.user);
       alert("Usuario registrado correctamente");
       this.user.name = "";
       this.user.lastname = "";
@@ -129,6 +126,27 @@ export default {
       this.user.dependency = "";
       this.user.active = "";
       console.log(this.users);
+    },
+    editUser(userParam) {
+      this.user.name = userParam.name;
+      this.user.lastname = userParam.lastname;
+      this.user.email = userParam.email;
+      this.user.password = userParam.password;
+      this.user.validto = userParam.validto;
+      this.user.dependency = userParam.dependency;
+      this.user.active = userParam.active;
+      console.log(this.users);
+    },
+    deleteUser(userParam) {
+      db.collection("users")
+        .doc(userParam.email)
+        .delete()
+        .then(function() {
+          console.log("Document successfully deleted!");
+        })
+        .catch(function(error) {
+          console.error("Error removing document: ", error);
+        });
     },
     async getDeps() {
       await db
