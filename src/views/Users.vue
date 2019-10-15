@@ -2,19 +2,19 @@
   <v-app id="vue-app-color">
     <div id="Users">
       <v-form ref="form" v-model="valid" class="mb-12 mt-12">
-        <h3>Crear un usuario</h3>
-        <v-text-field label="Nombre" v-model="user.name" :rules="nameRules"></v-text-field>
-        <v-text-field label="Apellido" v-model="user.lastname" :rules="lastnameRules"></v-text-field>
+        <h3>Create new User</h3>
+        <v-text-field label="Name" v-model="user.name" :rules="nameRules"></v-text-field>
+        <v-text-field label="Last Name" v-model="user.lastname" :rules="lastnameRules"></v-text-field>
         <v-text-field label="Email" v-model="user.email" :rules="emailRules"></v-text-field>
-        <v-text-field label="Contraseña" :type="'password'" v-model="user.password"></v-text-field>
-        <v-text-field label="Valido hasta" v-model="user.validto"></v-text-field>
+        <v-text-field label="Password" :type="'password'" v-model="user.password"></v-text-field>
+        <v-text-field label="Final Valid Date" v-model="user.validto"></v-text-field>
 
-        <v-select v-model="user.dependency" :items="namedependencies" label="Dependencies"></v-select>
-        <v-select v-model="user.active" :items="ops" label="Activo"></v-select>
-        <v-btn :disabled="!valid" @click="submit">Crear usuario</v-btn>
+        <v-select v-model="user.dependency" :items="namedependencies" label="Dependency"></v-select>
+        <v-select v-model="user.active" :items="ops" label="Enabled"></v-select>
+        <v-btn :disabled="!valid" @click="submit">Submit</v-btn>
       </v-form>
       <div>
-        <h3>Usuarios creados hasta el momento</h3>
+        <h3>All Users</h3>
         <v-card class="mt-6 mb-12">
           <v-card-title>
             <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
