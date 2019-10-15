@@ -1,7 +1,7 @@
 <template>
   <div id="Dependencies">
     <v-app id="vue-app-color">
-      <v-form ref="form" v-model="valid">
+      <v-form ref="form" v-model="valid" class="mb-12 mt-12">
         <h3>Create a new dependency</h3>
         <v-text-field label="Name" v-model="newDependency.name" :rules="nameRules"></v-text-field>
         <v-select v-model="newDependency.coordinator" :items="userIds" label="Coordinator"></v-select>
@@ -19,7 +19,7 @@
 
       <h3>All dependencies</h3>
 
-      <v-card>
+      <v-card class="mt-6 mb-12">
         <v-card-title>
           <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
         </v-card-title>
