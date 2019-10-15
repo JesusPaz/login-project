@@ -4,7 +4,8 @@
       <v-form ref="form" v-model="valid">
         <h3>Create a new dependency</h3>
         <v-text-field label="Name" v-model="newDependency.name" :rules="nameRules"></v-text-field>
-        <v-text-field label="Coordinator" v-model="newDependency.coordinator" :rules="cordRules"></v-text-field>
+        <v-select v-model="newDependency.coordinator" :items="userIds" label="Coordinator"></v-select>
+
         <v-text-field
           label="Max Number of Users"
           v-model="newDependency.maxnumber"
@@ -66,13 +67,14 @@ export default {
       ],
       ops: ["True", "False"],
       deps: [],
+      userIds: [],
       newDependency: {
         name: "",
         coordinator: "",
         maxnumber: "",
         location: "",
         active: "",
-        users: [],
+        users: []
       },
       editedIndex: -1,
       editedItem: {
@@ -81,7 +83,7 @@ export default {
         maxnumber: "",
         location: "",
         active: "",
-        users: [],
+        users: []
       },
       deletedItem: {
         name: "",
@@ -89,7 +91,7 @@ export default {
         maxnumber: "",
         location: "",
         active: "",
-        users: [],
+        users: []
       },
       defaultItem: {
         name: "",
@@ -97,7 +99,7 @@ export default {
         maxnumber: "",
         location: "",
         active: "",
-        users: [],
+        users: []
       },
       nameRules: [
         name => !!name || "Name is required",
@@ -122,10 +124,19 @@ export default {
   },
   mounted() {
     this.getDeps();
+    this.getUserIds();
   },
   computed: {
     items: function() {
       return this.deps;
+    },
+    usersWithId() {
+      if (!this.userIds) {
+        return [];
+      }
+      return this.userIds.map(userIds => {
+        id: userIds.id;
+      });
     }
   },
   methods: {
@@ -153,6 +164,16 @@ export default {
         .then(querySnapshot => {
           querySnapshot.docs.forEach(doc => {
             this.deps.push(doc.data());
+          });
+        });
+    },
+    async getUserIds() {
+      await db
+        .collection("users")
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.docs.forEach(doc => {
+            this.userIds.push(doc.data().name);
           });
         });
     },
