@@ -1,6 +1,9 @@
 <template>
-  <v-app>
-    <div id="Dependencies">
+  <div id="Dependencies">
+    <v-app>
+      <br />
+      <br />
+
       <br />
       <br />
       <v-form ref="form" v-model="valid">
@@ -23,21 +26,31 @@
       <br />
       <br />
 
-      <div>
-        <h3>All dependencies</h3>
+      <h3>All dependencies</h3>
 
-        <br />
-        <br />
+      <br />
+      <br />
 
-        <v-card>
-          <v-card-title>
-            <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
-          </v-card-title>
-          <v-data-table :headers="headers" :items="deps" :search="search"></v-data-table>
-        </v-card>
-      </div>
-    </div>
-  </v-app>
+      <v-card>
+        <v-card-title>
+          <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
+        </v-card-title>
+        <v-data-table
+          :search="search"
+          :headers="headers"
+          :items="deps"
+          sort-by="name"
+          class="elevation-1"
+        >
+          <template v-slot:top></template>
+          <template v-slot:item.action="{ item }">
+            <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
+            <v-icon small @click="deleteItem(item)">delete</v-icon>
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-app>
+  </div>
 </template>
 
 <script>
@@ -54,11 +67,34 @@ export default {
         { text: "Coordinator", value: "coordinator" },
         { text: "Max Number", value: "maxnumber" },
         { text: "Location", value: "location" },
-        { text: "Enabled", value: "active" }
+        { text: "Enabled", value: "active" },
+        { text: "Actions", value: "action", sortable: false }
       ],
       ops: ["True", "False"],
       deps: [],
       newDependency: {
+        name: "",
+        coordinator: "",
+        maxnumber: "",
+        location: "",
+        active: ""
+      },
+      editedIndex: -1,
+      editedItem: {
+        name: "",
+        coordinator: "",
+        maxnumber: "",
+        location: "",
+        active: ""
+      },
+      deletedItem: {
+        name: "",
+        coordinator: "",
+        maxnumber: "",
+        location: "",
+        active: ""
+      },
+      defaultItem: {
         name: "",
         coordinator: "",
         maxnumber: "",
@@ -88,7 +124,7 @@ export default {
   },
   mounted() {
     this.getDeps();
-    },
+  },
   computed: {
     items: function() {
       return this.deps;
@@ -96,15 +132,14 @@ export default {
   },
   methods: {
     addDependency() {
-      //dependenciesRef.push(this.newDependency);
-
       db.collection("dependencies")
-        .add(this.newDependency)
-        .then(function(docRef) {
-          alert("Dependency added");
+        .doc(this.newDependency.name)
+        .set(this.newDependency)
+        .then(function() {
+          alert("Dependency successfully added!");
         })
         .catch(function(error) {
-          alert(error);
+          alert("Error writing document: ", error);
         });
 
       this.newDependency.name = "";
@@ -122,6 +157,28 @@ export default {
             this.deps.push(doc.data());
           });
         });
+    },
+    editItem(item) {
+      this.editedIndex = this.deps.indexOf(item);
+      this.newDependency = Object.assign({}, item);
+    },
+
+    deleteItem(item) {
+      const index = this.deps.indexOf(item);
+      this.deletedItem = Object.assign({}, item);
+      if (confirm("Are you sure you want to delete this item?")) {
+        this.deps.splice(index, 1);
+
+        db.collection("dependencies")
+          .doc(this.deletedItem.name)
+          .delete()
+          .then(function() {
+            //alert("Document successfully deleted!");
+          })
+          .catch(function(error) {
+            alert("Error removing document: ", error);
+          });
+      }
     }
   }
 };
