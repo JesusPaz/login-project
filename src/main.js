@@ -51,7 +51,7 @@ router.beforeEach((to, from, next) => {
   if (!validUser && viewIsPrivate) {
     next('/');
   } else if (!viewIsPrivate && validUser) {
-    next('/home');
+    next('/dependencies');
   } else {
     next();
   }

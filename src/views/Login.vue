@@ -50,7 +50,7 @@ export default {
           user => {
             localStorage.setItem("user", this.email);
             this.$emit("validUser", true);
-            this.$router.push({ path: "home" });
+            this.$router.push({ path: "dependencies" });
           },
           error => {
             var errorCode = error.code;

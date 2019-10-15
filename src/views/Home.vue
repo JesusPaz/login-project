@@ -2,14 +2,14 @@
   <div id="Home">
     <v-bottom-navigation v-model="bottomNav">
       <v-btn value="recent" to="/dependencies">
-        <span>Dependencias</span>
+        <span>Dependencies</span>
       </v-btn>
 
       <v-btn value="favorites" to="/users">
-        <span>Usuarios</span>
+        <span>Users</span>
       </v-btn>
       <v-btn value="favorites" to="/" v-on:click.native="logout()" replace>
-        <span>Cerrar sesion</span>
+        <span>Log Out</span>
       </v-btn>
     </v-bottom-navigation>
     <router-view></router-view>
@@ -44,7 +44,6 @@ export default {
             this.$router.push({ path: "login" });
           },
           error => {
-            var errorCode = error.code;
             var errorMessage = error.message;
             alert(errorMessage);
           }
