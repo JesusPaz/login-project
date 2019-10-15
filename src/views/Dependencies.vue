@@ -1,58 +1,43 @@
 <template>
-  <div id="Dependencies">
-    <br />
-    <br />
-    <v-form ref="form" v-model="valid">
-      <h3>Create a new dependency</h3>
-      <v-text-field label="Name" v-model="newDependency.name" :rules="nameRules"></v-text-field>
-      <v-text-field label="Coordinator" v-model="newDependency.coordinator" :rules="cordRules"></v-text-field>
-      <v-text-field
-        label="Max Number of Users"
-        v-model="newDependency.maxnumber"
-        :rules="numberRules"
-      ></v-text-field>
-      <v-text-field label="Location" v-model="newDependency.location" :rules="locRules"></v-text-field>
-      <v-checkbox
-        v-model="newDependency.active"
-        :label="`Enabled: ${newDependency.active.toString()}`"
-      ></v-checkbox>
-      <v-btn @click="addDependency" :disabled="!valid">Submit</v-btn>
-    </v-form>
+  <v-app>
+    <div id="Dependencies">
+      <br />
+      <br />
+      <v-form ref="form" v-model="valid">
+        <h3>Create a new dependency</h3>
+        <v-text-field label="Name" v-model="newDependency.name" :rules="nameRules"></v-text-field>
+        <v-text-field label="Coordinator" v-model="newDependency.coordinator" :rules="cordRules"></v-text-field>
+        <v-text-field
+          label="Max Number of Users"
+          v-model="newDependency.maxnumber"
+          :rules="numberRules"
+        ></v-text-field>
+        <v-text-field label="Location" v-model="newDependency.location" :rules="locRules"></v-text-field>
+        <v-select v-model="newDependency.active" :items="ops" label="Enabled"></v-select>
 
-    <br />
-    <br />
-    <br />
-    <br />
-
-    <div>
-      <h3>All dependencies</h3>
+        <v-btn @click="addDependency" :disabled="!valid">Submit</v-btn>
+      </v-form>
 
       <br />
       <br />
-      <v-simple-table>
-        <template v-slot:default>
-          <thead>
-            <tr>
-              <th class="text-left">Name</th>
-              <th class="text-left">Coordinador</th>
-              <th class="text-left">Max Number</th>
-              <th class="text-left">Location</th>
-              <th class="text-left">Enabled</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(i, idx) in deps" :key="idx">
-              <td>{{ i.name }}</td>
-              <td>{{ i.coordinator }}</td>
-              <td>{{ i.maxnumber }}</td>
-              <td>{{ i.location }}</td>
-              <td>{{ i.active }}</td>
-            </tr>
-          </tbody>
-        </template>
-      </v-simple-table>
+      <br />
+      <br />
+
+      <div>
+        <h3>All dependencies</h3>
+
+        <br />
+        <br />
+
+        <v-card>
+          <v-card-title>
+            <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
+          </v-card-title>
+          <v-data-table :headers="headers" :items="deps" :search="search"></v-data-table>
+        </v-card>
+      </div>
     </div>
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -65,13 +50,22 @@ export default {
   data() {
     return {
       valid: false,
+      search: "",
+      headers: [
+        { text: "Name", value: "name" },
+        { text: "Coordinator", value: "coordinator" },
+        { text: "Max Number", value: "maxnumber" },
+        { text: "Location", value: "location" },
+        { text: "Enabled", value: "active" }
+      ],
+      ops: ["True", "False"],
       deps: [],
       newDependency: {
         name: "",
         coordinator: "",
         maxnumber: "",
         location: "",
-        active: false
+        active: ""
       },
       nameRules: [
         name => !!name || "Name is required",
@@ -121,8 +115,10 @@ export default {
       this.newDependency.coordinator = "";
       this.newDependency.maxnumber = "";
       this.newDependency.location = "";
-      this.newDependency.active = false;
-      console.log(this.dependenciesDB);
+      this.newDependency.active = "";
+	  console.log(this.dependenciesDB);
+	  
+
     },
     async getDeps() {
       await db
