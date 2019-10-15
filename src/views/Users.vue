@@ -15,43 +15,29 @@
       <div>
         <h3>Usuarios creados hasta el momento</h3>
 
-        <v-simple-table>
-          <template v-slot:default>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Email</th>
-                <th>Contraseña</th>
-                <th>Valido hasta</th>
-                <th>Dependencia</th>
-                <th>Activo</th>
-                <th colspan="2">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(i, idx) in deps" :key="idx">
-                <td>{{ i.name }}</td>
-                <td>{{ i.lastname }}</td>
-                <td>{{ i.email }}</td>
-                <td>{{ i.password }}</td>
-                <td>{{ i.validto }}</td>
-                <td>{{ i.dependency }}</td>
-                <td>{{ i.active }}</td>
-                <td>
-                  <button
-                    class="ml-3 bg-red hover:bg-red-dark text-white font-bold py-2 px-4 rounded text-xs"
-                    v-on:click="deleteUser(i)"
-                  >Delete</button>
-                  <button
-                    class="ml-3 bg-red hover:bg-red-dark text-white font-bold py-2 px-4 rounded text-xs"
-                    v-on:click="editUser(i)"
-                  >Edit</button>
-                </td>
-              </tr>
-            </tbody>
+        
+
+
+
+         <v-card>
+        <v-card-title>
+          <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
+        </v-card-title>
+        <v-data-table
+          :search="search"
+          :headers="headers"
+          :items="deps"
+          sort-by="name"
+          class="elevation-1"
+        >
+          <template v-slot:top></template>
+          <template v-slot:item.action="{ item }">
+            <v-icon small class="mr-2" @click="editUser(item)">edit</v-icon>
+            <v-icon small @click="deleteUser(item)">delete</v-icon>
           </template>
-        </v-simple-table>
+        </v-data-table>
+      </v-card>
+
       </div>
     </div>
   </v-app>
@@ -70,6 +56,18 @@ export default {
       valid: false,
       deps: [],
       ops: ["True", "False"],
+
+      search: "",
+      headers: [
+        { text: "Name", value: "name" },
+        { text: "Lastname", value: "lastname" },
+        { text: "Email", value: "email" },
+        { text: "Password", value: "password" },
+        { text: "Valid To", value: "validto" },
+        { text: "Dependency", value: "dependency" },
+        { text: "Active", value: "active" },
+        { text: "Actions", value: "action", sortable: false }
+      ],
 
       user: {
         name: "",
