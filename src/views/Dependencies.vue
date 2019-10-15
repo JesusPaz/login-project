@@ -27,8 +27,6 @@
           :search="search"
           :headers="headers"
           :items="deps"
-          :single-expand="singleExpand"
-          :expanded.sync="expanded"
           item-key="name"
           show-expand
           class="elevation-1"

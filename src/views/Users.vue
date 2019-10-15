@@ -40,9 +40,8 @@
 
 <script>
 import { db } from "./db";
-import firebase from 'firebase';
+import firebase from "firebase";
 
-let admin = require("firebase-admin");
 let query = db.collection("users");
 
 export default {
@@ -144,15 +143,17 @@ export default {
       console.log(this.users);
     },
     deleteUser(userParam) {
-      db.collection("users")
-        .doc(userParam.email)
-        .delete()
-        .then(function() {
-          console.log("Document successfully deleted!");
-        })
-        .catch(function(error) {
-          console.error("Error removing document: ", error);
-        });
+      if (confirm("Are you sure you want to delete this item?")) {
+        db.collection("users")
+          .doc(userParam.email)
+          .delete()
+          .then(function() {
+            console.log("Document successfully deleted!");
+          })
+          .catch(function(error) {
+            alert("Error removing document: ", error);
+          });
+      }
     },
     async getDeps() {
       await db
