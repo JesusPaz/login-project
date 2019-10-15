@@ -1,11 +1,6 @@
 <template>
   <div id="Dependencies">
     <v-app id="vue-app-color">
-      <br />
-      <br />
-
-      <br />
-      <br />
       <v-form ref="form" v-model="valid">
         <h3>Create a new dependency</h3>
         <v-text-field label="Name" v-model="newDependency.name" :rules="nameRules"></v-text-field>
@@ -21,15 +16,7 @@
         <v-btn @click="addDependency" :disabled="!valid">Submit</v-btn>
       </v-form>
 
-      <br />
-      <br />
-      <br />
-      <br />
-
       <h3>All dependencies</h3>
-
-      <br />
-      <br />
 
       <v-card>
         <v-card-title>
@@ -39,13 +26,19 @@
           :search="search"
           :headers="headers"
           :items="deps"
-          sort-by="name"
+          :single-expand="singleExpand"
+          :expanded.sync="expanded"
+          item-key="name"
+          show-expand
           class="elevation-1"
         >
           <template v-slot:top></template>
           <template v-slot:item.action="{ item }">
             <v-icon small class="mr-2" @click="editItem(item)">edit</v-icon>
             <v-icon small @click="deleteItem(item)">delete</v-icon>
+          </template>
+          <template v-slot:expanded-item="{ headers, item }">
+            <td :colspan="headers.length">{{item.users.toString()}}</td>
           </template>
         </v-data-table>
       </v-card>
@@ -68,7 +61,8 @@ export default {
         { text: "Max Number", value: "maxnumber" },
         { text: "Location", value: "location" },
         { text: "Enabled", value: "active" },
-        { text: "Actions", value: "action", sortable: false }
+        { text: "Actions", value: "action", sortable: false },
+        { text: "", value: "data-table-expand", sortable: false }
       ],
       ops: ["True", "False"],
       deps: [],
@@ -77,7 +71,8 @@ export default {
         coordinator: "",
         maxnumber: "",
         location: "",
-        active: ""
+        active: "",
+        users: [],
       },
       editedIndex: -1,
       editedItem: {
@@ -85,21 +80,24 @@ export default {
         coordinator: "",
         maxnumber: "",
         location: "",
-        active: ""
+        active: "",
+        users: [],
       },
       deletedItem: {
         name: "",
         coordinator: "",
         maxnumber: "",
         location: "",
-        active: ""
+        active: "",
+        users: [],
       },
       defaultItem: {
         name: "",
         coordinator: "",
         maxnumber: "",
         location: "",
-        active: ""
+        active: "",
+        users: [],
       },
       nameRules: [
         name => !!name || "Name is required",
