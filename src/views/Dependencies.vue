@@ -1,6 +1,6 @@
 <template>
   <div id="Dependencies">
-    <v-app>
+    <v-app id="vue-app-color">
       <br />
       <br />
 
@@ -183,6 +183,8 @@ export default {
   }
 };
 </script>
-
 <style>
+#vue-app-color {
+  background-color: white;
+}
 </style>
