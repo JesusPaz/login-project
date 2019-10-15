@@ -16,7 +16,7 @@
       <div>
         <h3>Usuarios creados hasta el momento</h3>
         <v-card class="mt-6 mb-12">
-          <v-card-title >
+          <v-card-title>
             <v-text-field v-model="search" label="Search" single-line hide-details></v-text-field>
           </v-card-title>
           <v-data-table
@@ -40,7 +40,9 @@
 
 <script>
 import { db } from "./db";
+import firebase from 'firebase';
 
+let admin = require("firebase-admin");
 let query = db.collection("users");
 
 export default {
@@ -114,6 +116,13 @@ export default {
       db.collection("users")
         .doc(this.user.email)
         .set(this.user);
+
+      let depsRef = db.collection("dependencies").doc(this.user.dependency);
+
+      depsRef.update({
+        users: firebase.firestore.FieldValue.arrayUnion(this.user.name)
+      });
+
       alert("Usuario registrado correctamente");
       this.user.name = "";
       this.user.lastname = "";
