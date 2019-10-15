@@ -129,14 +129,6 @@ export default {
   computed: {
     items: function() {
       return this.deps;
-    },
-    usersWithId() {
-      if (!this.userIds) {
-        return [];
-      }
-      return this.userIds.map(userIds => {
-        id: userIds.id;
-      });
     }
   },
   methods: {
